@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANTIGRAVITY // Zero-G Vector Protocol</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Ambient Space Background Glow -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  
+  <div id="app-container">
+    <!-- Top Telemetry Header -->
+    <header id="telemetry-bar">
+      <div class="brand">
+        <span class="pulse-indicator"></span>
+        <span class="system-name">ANTIGRAVITY // VECTOR_OS v3.8</span>
+      </div>
+      <div class="status-stats">
+        <div class="stat-pill"><span class="label">FPS:</span> <span id="fps-val" class="val">60</span></div>
+        <div class="stat-pill"><span class="label">CORES:</span> <span id="cores-val" class="val">0</span></div>
+        <div class="stat-pill"><span class="label">SCORE:</span> <span id="score-val" class="val highlight">00000</span></div>
+        <div class="stat-pill"><span class="label">MULTIPLIER:</span> <span id="multiplier-val" class="val">1.0x</span></div>
+      </div>
+      <div class="header-actions">
+        <button id="audio-toggle" class="hud-btn" title="Toggle Audio (Synthesizer)">
+          <span class="icon">🔊</span> <span id="audio-text">SOUND ON</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Game & HUD Viewport -->
+    <main id="viewport-wrapper">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- Glassmorphic In-Game HUD Overlays -->
+      <div id="hud-overlay">
+        <!-- Top Left: Ship Integrity & Fuel -->
+        <div class="hud-panel hud-top-left">
+          <div class="panel-header">VESSEL TELEMETRY</div>
+          <div class="gauge-group">
+            <div class="gauge-label"><span>HULL INTEGRITY</span><span id="hull-pct">100%</span></div>
+            <div class="gauge-bar"><div id="hull-fill" class="fill hull-gradient" style="width: 100%;"></div></div>
+          </div>
+          <div class="gauge-group">
+            <div class="gauge-label"><span>REPULSOR PULSE ENERGY</span><span id="energy-pct">100%</span></div>
+            <div class="gauge-bar"><div id="energy-fill" class="fill energy-gradient" style="width: 100%;"></div></div>
+          </div>
+          <div class="gauge-group">
+            <div class="gauge-label"><span>OVERDRIVE BOOST</span><span id="boost-pct">100%</span></div>
+            <div class="gauge-bar"><div id="boost-fill" class="fill boost-gradient" style="width: 100%;"></div></div>
+          </div>
+        </div>
+
+        <!-- Top Right: Flight Dynamics -->
+        <div class="hud-panel hud-top-right">
+          <div class="panel-header">GRAVITATIONAL DYNAMICS</div>
+          <div class="telemetry-grid">
+            <div class="t-cell"><span class="t-lbl">VELOCITY</span><span id="vel-val" class="t-val">0.0 km/s</span></div>
+            <div class="t-cell"><span class="t-lbl">G-LOAD</span><span id="g-val" class="t-val">1.00 G</span></div>
+            <div class="t-cell"><span class="t-lbl">SECTOR TIME</span><span id="time-val" class="t-val">00:00</span></div>
+            <div class="t-cell"><span class="t-lbl">ANOMALIES</span><span id="anomaly-val" class="t-val warning">STABLE</span></div>
+          </div>
+          <!-- Mini Radar -->
+          <div class="radar-box">
+            <canvas id="radar-canvas" width="120" height="120"></canvas>
+            <div class="radar-scanline"></div>
+          </div>
+        </div>
+
+        <!-- Bottom Controls Quick Reference -->
+        <div class="hud-panel hud-bottom-center">
+          <div class="key-hint"><span class="kbd">W</span> / <span class="kbd">▲</span> Thrusters</div>
+          <div class="key-hint"><span class="kbd">A</span><span class="kbd">D</span> / <span class="kbd">◄</span><span class="kbd">►</span> Rotate</div>
+          <div class="key-hint"><span class="kbd">SPACE</span> Repulsor Blast</div>
+          <div class="key-hint"><span class="kbd">SHIFT</span> Boost</div>
+          <div class="key-hint"><span class="kbd">M</span> Mute</div>
+        </div>
+      </div>
+
+      <!-- Start / Game Over Modal Overlay -->
+      <div id="modal-screen" class="active">
+        <div class="modal-card">
+          <div class="modal-badge">DEEPMIND AGY DEMO</div>
+          <h1 class="glitch-title" data-text="ANTIGRAVITY">ANTIGRAVITY</h1>
+          <p class="subtitle">Zero-G Kinetic Vector Simulator & Quantum Harvester</p>
+
+          <div class="mission-brief">
+            <div class="brief-item">
+              <span class="brief-icon">⚡</span>
+              <div>
+                <strong>Navigate Zero-G Vector Physics</strong>
+                <p>Maintain inertial control around shifting gravitational singularities and orbital debris.</p>
+              </div>
+            </div>
+            <div class="brief-item">
+              <span class="brief-icon">💎</span>
+              <div>
+                <strong>Harvest Quantum Relics</strong>
+                <p>Collect high-energy cores to build score multipliers and recharge your defensive matrix.</p>
+              </div>
+            </div>
+            <div class="brief-item">
+              <span class="brief-icon">🛡️</span>
+              <div>
+                <strong>Repulsor Pulse Field</strong>
+                <p>Press [SPACE] to detonate a gravitational repulsor wave, deflecting kinetic impacts.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="game-over-stats" class="hidden">
+            <div class="stat-recap">
+              <div><span>FINAL SCORE</span><h2 id="final-score">0</h2></div>
+              <div><span>CORES HARVESTED</span><h3 id="final-cores">0</h3></div>
+              <div><span>PEAK MULTIPLIER</span><h3 id="final-multiplier">1.0x</h3></div>
+              <div><span>SURVIVAL TIME</span><h3 id="final-time">00:00</h3></div>
+            </div>
+          </div>
+
+          <div class="modal-buttons">
+            <button id="start-btn" class="glow-button primary">INITIALIZE FLIGHT</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="audio.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
